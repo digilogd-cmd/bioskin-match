@@ -24,7 +24,11 @@ app = FastAPI(
 from fastapi.middleware.cors import CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://artgourmet.cloud",
+        "http://localhost:3010",
+        "http://localhost:8002",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
