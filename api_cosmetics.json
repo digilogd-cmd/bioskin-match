@@ -1,0 +1,408 @@
+[
+  {
+    "id": 846,
+    "brand": "clinique",
+    "name": "Even Better&trade; Compact Makeup Broad Spectrum SPF 15",
+    "price": "32.0",
+    "price_sign": "$",
+    "currency": "USD",
+    "image_link": "https://www.clinique.com/media/export/cms/products/181x209/clq_7M81_181x209.png",
+    "product_link": "https://www.clinique.com/product/1599/24867/makeup/foundations/even-better-compact-makeup-broad-spectrum-spf-15",
+    "website_link": "https://www.clinique.com",
+    "description": "A light cream with a powdery finish, our compact makeup creates more even-toned skin, instantly. Shades for Very Fair, Moderately Fair, Medium, Deep.",
+    "rating": null,
+    "category": null,
+    "product_type": "foundation",
+    "tag_list": [],
+    "created_at": "2017-12-23T23:43:17.723Z",
+    "updated_at": "2017-12-23T23:43:22.499Z",
+    "product_api_url": "http://makeup-api.herokuapp.com/api/v1/products/846.json",
+    "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/846/original/data?1514072602",
+    "product_colors": [
+      {
+        "hex_value": "#F3D6BF",
+        "colour_name": "1 Linen"
+      },
+      {
+        "hex_value": "#F0C9AE",
+        "colour_name": "2 Alabaster"
+      },
+      {
+        "hex_value": "#E9BC98",
+        "colour_name": "4 Creamwhip"
+      },
+      {
+        "hex_value": "#F1BF9E",
+        "colour_name": "5 Fair"
+      },
+      {
+        "hex_value": "#E6BC9F",
+        "colour_name": "6 Ivory"
+      },
+      {
+        "hex_value": "#DEB193",
+        "colour_name": "7 Cream Chamois"
+      },
+      {
+        "hex_value": "#E2B186",
+        "colour_name": "8 Golden Neutral"
+      },
+      {
+        "hex_value": "#DCAB86",
+        "colour_name": "9 Neutral"
+      },
+      {
+        "hex_value": "#DAA878",
+        "colour_name": "11 Honey"
+      },
+      {
+        "hex_value": "#D7A581",
+        "colour_name": "12 Porcelain Beige"
+      },
+      {
+        "hex_value": "#D6A683",
+        "colour_name": "14 Vanilla"
+      },
+      {
+        "hex_value": "#D09B73",
+        "colour_name": "15 Beige"
+      },
+      {
+        "hex_value": "#C99B71",
+        "colour_name": "18 Sand"
+      },
+      {
+        "hex_value": "#D28E55",
+        "colour_name": "20 Deep Neutral"
+      },
+      {
+        "hex_value": "#C8874E",
+        "colour_name": "21 Cream Caramel"
+      },
+      {
+        "hex_value": "#BE773D",
+        "colour_name": "23 Ginger"
+      },
+      {
+        "hex_value": "#B4753E",
+        "colour_name": "24 Golden"
+      },
+      {
+        "hex_value": "#995C27",
+        "colour_name": "26 Amber"
+      },
+      {
+        "hex_value": "#8E5230",
+        "colour_name": "28 Clove"
+      },
+      {
+        "hex_value": "#834E2E",
+        "colour_name": "29 Sienna"
+      }
+    ]
+  },
+  {
+    "id": 845,
+    "brand": "clinique",
+    "name": "Redness Solutions Makeup<BR>Broad Spectrum SPF 15<BR>With Probiotic Technology",
+    "price": "28.0",
+    "price_sign": "$",
+    "currency": "USD",
+    "image_link": "https://www.clinique.com/media/export/cms/products/181x209/clq_70JW_181x209.png",
+    "product_link": "https://www.clinique.com/product/1599/13188/makeup/foundations/redness-solutions-makeupbroad-spectrum-spf-15with-probiotic-technology",
+    "website_link": "https://www.clinique.com",
+    "description": "",
+    "rating": null,
+    "category": null,
+    "product_type": "foundation",
+    "tag_list": [],
+    "created_at": "2017-12-23T23:43:17.197Z",
+    "updated_at": "2017-12-23T23:43:21.929Z",
+    "product_api_url": "http://makeup-api.herokuapp.com/api/v1/products/845.json",
+    "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/845/original/data?1514072601",
+    "product_colors": [
+      {
+        "hex_value": "#CD8E6B",
+        "colour_name": "Calming Vanilla"
+      },
+      {
+        "hex_value": "#DC9C7A",
+        "colour_name": "Calming Neutral"
+      },
+      {
+        "hex_value": "#F4BB95",
+        "colour_name": "Calming Alabaster"
+      },
+      {
+        "hex_value": "#F1B08C",
+        "colour_name": "Calming Fair"
+      },
+      {
+        "hex_value": "#CF906E",
+        "colour_name": "Calming Honey"
+      },
+      {
+        "hex_value": "#E7A784",
+        "colour_name": "Calming Ivory"
+      }
+    ]
+  },
+  {
+    "id": 844,
+    "brand": "clinique",
+    "name": "Stay-Matte Oil-Free Makeup",
+    "price": "26.0",
+    "price_sign": "$",
+    "currency": "USD",
+    "image_link": "https://www.clinique.com/media/export/cms/products/181x209/clq_7KXC_181x209.png",
+    "product_link": "https://www.clinique.com/product/1599/21954/makeup/foundations/stay-matte-oil-free-makeup",
+    "website_link": "https://www.clinique.com",
+    "description": "Tested for streaking and fading at 88°F with a constant 80% humidity, all to prove Stay-Matte stays fresh. At the same time, this patent-pending formula absorbs shine, controls oil, resists sweat. And you stay matte all day.",
+    "rating": null,
+    "category": null,
+    "product_type": "foundation",
+    "tag_list": [],
+    "created_at": "2017-12-23T23:43:16.503Z",
+    "updated_at": "2017-12-23T23:43:21.230Z",
+    "product_api_url": "http://makeup-api.herokuapp.com/api/v1/products/844.json",
+    "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/844/original/data?1514072601",
+    "product_colors": [
+      {
+        "hex_value": "#F3D6BF",
+        "colour_name": "01 Linen"
+      },
+      {
+        "hex_value": "#F0C9AE",
+        "colour_name": "02 Alabaster"
+      },
+      {
+        "hex_value": "#E9BC98",
+        "colour_name": "04 Cream Whip"
+      },
+      {
+        "hex_value": "#F1BF9E",
+        "colour_name": "05 Fair"
+      },
+      {
+        "hex_value": "#E6BC9F",
+        "colour_name": "06 Ivory"
+      },
+      {
+        "hex_value": "#DEB193",
+        "colour_name": "07 Cream Chamois"
+      },
+      {
+        "hex_value": "#E2B186",
+        "colour_name": "08 Golden Neutral"
+      },
+      {
+        "hex_value": "#DCAB86",
+        "colour_name": "09 Neutral"
+      },
+      {
+        "hex_value": "#DAA878",
+        "colour_name": "11 Honey"
+      },
+      {
+        "hex_value": "#D6A683",
+        "colour_name": "14 Vanilla"
+      },
+      {
+        "hex_value": "#D09B73",
+        "colour_name": "15 Beige"
+      },
+      {
+        "hex_value": "#C99B71",
+        "colour_name": "19 Sand"
+      },
+      {
+        "hex_value": "#D28E55",
+        "colour_name": "20 Deep Neutral"
+      },
+      {
+        "hex_value": "#C8874E",
+        "colour_name": "21 Cream Caramel"
+      },
+      {
+        "hex_value": "#BE773D",
+        "colour_name": "23 Ginger"
+      },
+      {
+        "hex_value": "#B4753E",
+        "colour_name": "24 Golden"
+      },
+      {
+        "hex_value": "#AD7044",
+        "colour_name": "25 Spice"
+      },
+      {
+        "hex_value": "#995C27",
+        "colour_name": "26 Amber"
+      },
+      {
+        "hex_value": "#8E5230",
+        "colour_name": "28 Clove"
+      },
+      {
+        "hex_value": "#834E2E",
+        "colour_name": "29 Sienna"
+      }
+    ]
+  },
+  {
+    "id": 843,
+    "brand": "clinique",
+    "name": "Repairwear Laser Focus&trade; All-Smooth Makeup Broad Spectrum SPF 15",
+    "price": "36.0",
+    "price_sign": "$",
+    "currency": "USD",
+    "image_link": "https://www.clinique.com/media/export/cms/products/181x209/clq_7C5H01_181x209.png",
+    "product_link": "https://www.clinique.com/product/1599/19314/makeup/foundations/repairwear-laser-focus-all-smooth-makeup-broad-spectrum-spf-15",
+    "website_link": "https://www.clinique.com",
+    "description": "",
+    "rating": null,
+    "category": null,
+    "product_type": "foundation",
+    "tag_list": [],
+    "created_at": "2017-12-23T23:43:15.393Z",
+    "updated_at": "2017-12-23T23:43:20.134Z",
+    "product_api_url": "http://makeup-api.herokuapp.com/api/v1/products/843.json",
+    "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/843/original/data?1514072600",
+    "product_colors": [
+      {
+        "hex_value": "#F7D6BF",
+        "colour_name": "Shade 01"
+      },
+      {
+        "hex_value": "#FAD4B4",
+        "colour_name": "Shade 1.5"
+      },
+      {
+        "hex_value": "#F2C9A9",
+        "colour_name": "Shade 02"
+      },
+      {
+        "hex_value": "#F0C5AA",
+        "colour_name": "Shade 03"
+      },
+      {
+        "hex_value": "#ECBBA0",
+        "colour_name": "Shade 04"
+      },
+      {
+        "hex_value": "#E4BAA2",
+        "colour_name": "Shade 05"
+      },
+      {
+        "hex_value": "#DAAF91",
+        "colour_name": "Shade 06"
+      },
+      {
+        "hex_value": "#DBA987",
+        "colour_name": "Shade 07"
+      },
+      {
+        "hex_value": "#E1A989",
+        "colour_name": "Shade 08"
+      },
+      {
+        "hex_value": "#DBA57A",
+        "colour_name": "Shade 09"
+      },
+      {
+        "hex_value": "#C98B5D",
+        "colour_name": "Shade 11"
+      },
+      {
+        "hex_value": "#B4753E",
+        "colour_name": "Shade 12"
+      }
+    ]
+  },
+  {
+    "id": 842,
+    "brand": "clinique",
+    "name": "Perfectly Real&trade; Compact Makeup",
+    "price": "28.0",
+    "price_sign": "$",
+    "currency": "USD",
+    "image_link": "https://www.clinique.com/media/export/cms/products/181x209/clq_6GTY_181x209.png",
+    "product_link": "https://www.clinique.com/product/1599/5273/makeup/foundations/perfectly-real-compact-makeup",
+    "website_link": "https://www.clinique.com",
+    "description": "Silky, oil-free formula looks like your skin—only better. Optimizes skin's varying tones to create a more even appearance. Buildable coverage lasts for hours, yet feels like nothing at all. Controls shine. In a ready-to-go, ready-to-perfect compact. Oil-free.",
+    "rating": null,
+    "category": null,
+    "product_type": "foundation",
+    "tag_list": [],
+    "created_at": "2017-12-23T23:43:14.642Z",
+    "updated_at": "2017-12-23T23:43:19.524Z",
+    "product_api_url": "http://makeup-api.herokuapp.com/api/v1/products/842.json",
+    "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/842/original/open-uri20171223-4-1b3ma9p?1514072599",
+    "product_colors": [
+      {
+        "hex_value": "#FAD4B4",
+        "colour_name": "104"
+      },
+      {
+        "hex_value": "#F2D0B9",
+        "colour_name": "PR 106"
+      },
+      {
+        "hex_value": "#F2C9A9",
+        "colour_name": "PR 114"
+      },
+      {
+        "hex_value": "#F1CBAB",
+        "colour_name": "PR 108"
+      },
+      {
+        "hex_value": "#EFCAB2",
+        "colour_name": "PR 110"
+      },
+      {
+        "hex_value": "#F7D6BF",
+        "colour_name": "PR 102"
+      },
+      {
+        "hex_value": "#ECC6A2",
+        "colour_name": "PR 116"
+      },
+      {
+        "hex_value": "#F0C5AA",
+        "colour_name": "118"
+      },
+      {
+        "hex_value": "#EBBF9F",
+        "colour_name": "PR 120"
+      },
+      {
+        "hex_value": "#ECBD94",
+        "colour_name": "122"
+      },
+      {
+        "hex_value": "#E5B78B",
+        "colour_name": "PR 126"
+      },
+      {
+        "hex_value": "#E9B68F",
+        "colour_name": "PR 130"
+      },
+      {
+        "hex_value": "#E3AE7B",
+        "colour_name": "PR 134"
+      },
+      {
+        "hex_value": "#E4AB7C",
+        "colour_name": "138"
+      },
+      {
+        "hex_value": "#D08F62",
+        "colour_name": "144"
+      },
+      {
+        "hex_value": "#BA784B",
+        "colour_name": "146"
+      }
+    ]
+  }
+]

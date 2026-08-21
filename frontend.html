@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioSkin Match 2.0 - AI 성분 궁합 분석</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --glass-bg: rgba(22, 27, 34, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+            --accent-glow: rgba(88, 166, 255, 0.4);
+            --accent-color: #58a6ff;
+            --success-color: #238636;
+            --warning-color: #d29922;
+            --danger-color: #f85149;
+            --alphafold-color: #a371f7;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 20px 40px;
+            background: rgba(13, 17, 23, 0.9);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0;
+            background: -webkit-linear-gradient(45deg, #58a6ff, #a371f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            flex: 2;
+            padding: 20px;
+            border-right: 1px solid var(--glass-border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+            background: rgba(22, 27, 34, 0.3);
+            overflow-y: auto;
+            min-width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-group {
+            margin-bottom: 10px;
+        }
+        .filter-title {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .filter-btn.active {
+            background: rgba(88, 166, 255, 0.2);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+        .filter-btn-luxury {
+            border-color: #d4af37 !important;
+            color: #d4af37 !important;
+        }
+        .filter-btn-luxury.active {
+            background: rgba(212, 175, 55, 0.2) !important;
+            border-color: #d4af37 !important;
+            color: #d4af37 !important;
+        }
+
+        /* Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .product-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-color);
+        }
+        .product-card.selected {
+            border-color: var(--success-color);
+            background: rgba(35, 134, 54, 0.1);
+        }
+        
+        .p-brand { font-size: 0.8rem; color: var(--accent-color); font-weight: 600; }
+        .p-name { font-size: 1rem; font-weight: 700; margin: 5px 0; }
+        .p-cat { font-size: 0.8rem; color: var(--text-muted); }
+        .p-ing { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Right Panel Elements */
+        .selected-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            flex: 1;
+        }
+        .selected-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .selected-item h4 { margin: 0; font-size: 0.95rem; }
+        .btn-remove { background: transparent; border: none; color: var(--danger-color); cursor: pointer; font-size: 1.2rem; }
+        
+        .analyze-btn {
+            background: linear-gradient(135deg, #a371f7, #6e40c9);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(163, 113, 247, 0.3);
+        }
+        .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(163, 113, 247, 0.5); }
+
+        /* Results Overlay */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal {
+            background: #161b22;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            width: 80%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: transparent; border: none;
+            color: var(--text-muted); font-size: 1.5rem; cursor: pointer;
+        }
+        
+        .result-box { margin-bottom: 15px; padding: 15px; border-radius: 8px; background: rgba(255,255,255,0.03); border-left: 4px solid var(--text-muted); }
+        .result-box.warning { border-color: var(--danger-color); }
+        .result-box.synergy { border-color: var(--success-color); }
+        .result-box.alphafold { border-color: var(--alphafold-color); background: rgba(163, 113, 247, 0.05); }
+        
+        .ratio-box {
+            text-align: center;
+            padding: 20px;
+            background: rgba(88, 166, 255, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .ratio-box h2 { margin: 0; color: var(--accent-color); font-size: 1.8rem; }
+        
+        .progress-bar-container { background: rgba(255,255,255,0.1); border-radius: 4px; height: 8px; margin: 5px 0 15px 0; overflow: hidden; }
+        .progress-bar-fill { background: var(--accent-color); height: 100%; transition: width 0.5s ease; }
+        .badge { display: inline-block; padding: 3px 8px; background: rgba(255,255,255,0.1); border-radius: 12px; font-size: 0.8rem; margin: 2px 4px 2px 0; }
+        
+        .rec-item { padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 8px; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+        .rec-item:hover { background: rgba(255,255,255,0.05); }
+        .rec-item.good { border-left: 3px solid var(--success-color); }
+        .rec-item.bad { border-left: 3px solid var(--danger-color); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>BioSkin Match V2.0</h1>
+        <div style="font-size: 0.9rem; color: var(--text-muted);">Ingredient Compatibility Engine</div>
+    </div>
+
+    <div class="dashboard">
+        <!-- Left Panel: Products & Filters -->
+        <div class="left-panel">
+            <div class="filter-section">
+                <div class="filter-group" id="brandFilters">
+                    <div class="filter-title">브랜드 필터</div>
+                    <button class="filter-btn active" data-filter="all" onclick="setFilter('brand', 'all')">전체</button>
+                    <!-- 동적 생성 -->
+                </div>
+                <div class="filter-group" id="categoryFilters">
+                    <div class="filter-title">종류 필터</div>
+                    <button class="filter-btn active" data-filter="all" onclick="setFilter('category', 'all')">전체</button>
+                    <!-- 동적 생성 -->
+                </div>
+            </div>
+            
+            <div class="product-grid" id="productGrid">
+                <!-- 제품 로딩 중... -->
+            </div>
+        </div>
+
+        <!-- Right Panel: Selection & Action -->
+        <div class="right-panel">
+            <h3 style="margin-top:0; color: var(--accent-color);">선택된 화장품 <span id="selCount">(0/5)</span></h3>
+            <ul class="selected-list" id="selectedList">
+                <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-top: 50px;">좌측에서 배합을 원하는 화장품을 선택하세요.</p>
+            </ul>
+            <button class="analyze-btn" onclick="analyzeCombination()">🧪 과학적 조합 분석</button>
+            
+            <div id="recommendationPanel" style="display:none; margin-top: 30px;">
+                <h4 style="color:var(--success-color); margin-bottom: 10px;">✨ 찰떡 조합 추천 (Top 5)</h4>
+                <div id="recGoodList"></div>
+                
+                <h4 style="color:var(--danger-color); margin-top: 20px; margin-bottom: 10px;">⚠️ 상극 경고 (Top 5)</h4>
+                <div id="recBadList"></div>
+            </div>
+            
+            <div id="dupePanel" style="display:none; margin-top: 30px; padding: 15px; background: rgba(255, 215, 0, 0.1); border-radius: 12px; border: 1px solid #ffd700;">
+                <h4 style="color:#ffd700; margin-top:0; margin-bottom: 10px;">👑 명품 가성비 듀프 꿀조합</h4>
+                <div id="dupeResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Result Modal -->
+    <div class="overlay" id="resultOverlay">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 style="margin-top:0; color:var(--accent-color);">🧬 분석 결과 리포트</h2>
+            
+            <div class="ratio-box">
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">🔥 최적 배합 비율 (Ideal Ratio)</div>
+                <h2 id="idealRatioTxt"></h2>
+                <div style="margin-top: 10px; font-size: 1.1rem;" id="summaryTxt"></div>
+            </div>
+
+            <h3 style="color: var(--alphafold-color);">🔬 펩타이드 성분 인사이트</h3>
+            <div id="alphafoldSection"></div>
+
+            <h3 style="margin-top: 30px;">✨ 시너지 및 상충 분석</h3>
+            <div id="synergySection"></div>
+            <div id="warningSection"></div>
+            
+            <h3 style="margin-top: 30px;">🕒 추천 레이어링 순서</h3>
+            <div id="routineSection"></div>
+            
+            <h3 style="margin-top: 30px; color: #58a6ff;">📊 초정밀 오감 & 기능성 지표</h3>
+            <div id="sensorySection" style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px;"></div>
+            
+            <h3 style="margin-top: 30px; color: #ffb86c;">✨ AI 뷰티 마스터 종합 결론</h3>
+            <div id="aiConclusion" style="padding: 20px; background: rgba(255, 184, 108, 0.1); border-left: 4px solid #ffb86c; border-radius: 8px; line-height: 1.6; font-size: 1.05rem;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8002/api/v1';
+        let allProducts = [];
+        let selectedIds = new Set();
+        let currentFilters = { brand: 'all', category: 'all' };
+
+        window.onload = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/products/all`);
+                allProducts = await res.json();
+                buildFilters();
+                renderGrid();
+            } catch (err) {
+                document.getElementById('productGrid').innerHTML = '<p style="color:red;">API 서버(backend_rag_api.py) 연결 실패.</p>';
+            }
+        };
+
+        function buildFilters() {
+            const brandLuxuryCount = {};
+            allProducts.forEach(p => {
+                if(!brandLuxuryCount[p.brand_name]) brandLuxuryCount[p.brand_name] = 0;
+                if(p.price >= 100000) brandLuxuryCount[p.brand_name]++;
+            });
+
+            let brands = [...new Set(allProducts.map(p => p.brand_name))];
+            brands.sort((a, b) => {
+                const countA = brandLuxuryCount[a] || 0;
+                const countB = brandLuxuryCount[b] || 0;
+                if (countB !== countA) return countB - countA;
+                return a.localeCompare(b);
+            });
+
+            const cats = [...new Set(allProducts.map(p => p.category))];
+            
+            const bDiv = document.getElementById('brandFilters');
+            brands.forEach(b => {
+                const isLuxury = (brandLuxuryCount[b] || 0) > 0;
+                const luxClass = isLuxury ? ' filter-btn-luxury' : '';
+                bDiv.innerHTML += `<button class="filter-btn${luxClass}" data-filter="${b}" onclick="setFilter('brand', '${b}')">${b}</button>`;
+            });
+
+            const cDiv = document.getElementById('categoryFilters');
+            cats.forEach(c => {
+                cDiv.innerHTML += `<button class="filter-btn" data-filter="${c}" onclick="setFilter('category', '${c}')">${c}</button>`;
+            });
+        }
+
+        function setFilter(type, value) {
+            currentFilters[type] = value;
+            
+            // Update UI buttons
+            const btns = document.getElementById(type + 'Filters').getElementsByTagName('button');
+            for(let b of btns) {
+                if(b.getAttribute('data-filter') === value) b.classList.add('active');
+                else b.classList.remove('active');
+            }
+            
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            
+            const filtered = allProducts.filter(p => {
+                const bMatch = currentFilters.brand === 'all' || p.brand_name === currentFilters.brand;
+                const cMatch = currentFilters.category === 'all' || p.category === currentFilters.category;
+                return bMatch && cMatch;
+            });
+
+            filtered.forEach(p => {
+                const isSel = selectedIds.has(p.product_id);
+                const card = document.createElement('div');
+                card.className = `product-card ${isSel ? 'selected' : ''}`;
+                card.onclick = () => toggleSelect(p.product_id);
+                
+                let badgeHtml = '';
+                if(p.is_kfda_verified) {
+                    badgeHtml = '<span style="background:var(--success-color); color:white; padding:2px 6px; border-radius:4px; font-size:0.7rem; margin-right:5px;">✓ 식약처 인증</span>';
+                } else if(p.data_source === 'OLIVEYOUNG') {
+                    badgeHtml = '<span style="background:var(--color-primary); color:white; padding:2px 6px; border-radius:4px; font-size:0.7rem; margin-right:5px;">올리브영 데이터</span>';
+                } else if(p.data_source.includes('VERIFIED') || p.data_source.includes('GLOBAL')) {
+                    badgeHtml = '<span style="background:#58a6ff; color:white; padding:2px 6px; border-radius:4px; font-size:0.7rem; margin-right:5px;">수집된 제품 데이터</span>';
+                } else {
+                    badgeHtml = '<span style="background:#555; color:white; padding:2px 6px; border-radius:4px; font-size:0.7rem; margin-right:5px;">Mock 데이터</span>';
+                }
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="p-brand">${badgeHtml} ${p.brand_name}</div>
+                        ${p.market_name ? `<div style="font-size:0.9rem; color:#888; margin-top:3px;">${p.market_name}</div>` : ''}
+                        <div class="p-name">${p.product_name}</div>
+                        <div class="p-price" style="font-weight:bold; color:#ffb86c; margin-top:3px; margin-bottom:5px;">₩${p.price.toLocaleString()}</div>
+                        <div class="p-cat">${p.category} | pH ${p.ph_value}</div>
+                        <div class="p-ing">${p.ingredients.join(', ')}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleSelect(pid) {
+            if(selectedIds.has(pid)) {
+                selectedIds.delete(pid);
+            } else {
+                if(selectedIds.size >= 5) { alert('최대 5개까지만 선택 가능합니다.'); return; }
+                selectedIds.add(pid);
+            }
+            renderGrid();
+            updateSelectedList();
+            
+            if(selectedIds.size === 1) {
+                const pid = Array.from(selectedIds)[0];
+                fetchRecommendations(pid);
+                const p = allProducts.find(x => x.product_id === pid);
+                if(p && p.is_luxury) {
+                    fetchDupeRecommendations(pid);
+                } else {
+                    document.getElementById('dupePanel').style.display = 'none';
+                }
+            } else {
+                document.getElementById('recommendationPanel').style.display = 'none';
+                document.getElementById('dupePanel').style.display = 'none';
+            }
+        }
+        
+        async function fetchDupeRecommendations(pid) {
+            try {
+                const res = await fetch(`${API_BASE}/products/${pid}/dupes`);
+                if(!res.ok) return;
+                const data = await res.json();
+                
+                const panel = document.getElementById('dupePanel');
+                const resultDiv = document.getElementById('dupeResult');
+                
+                let dupeHtml = `<p style="font-size: 0.9rem; margin-bottom: 10px;">이 명품(${data.luxury_target.product_name})과 성분이 가장 유사한 가성비 조합입니다.</p>`;
+                
+                data.dupe_combinations.forEach((d, idx) => {
+                    dupeHtml += `<div style="margin-top: 15px; border: 1px solid #444; border-radius: 8px; padding: 10px; background: rgba(255,215,0,0.05);">`;
+                    dupeHtml += `<div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; color: #ffd700;">추천 조합 ${idx+1} (일치율: ${d.match_rate}%)</div>`;
+                    dupeHtml += `<div style="font-size: 0.9rem; margin-bottom: 8px; color: #aaa;">총 가격: ₩${d.total_price.toLocaleString()} (<span style="color:#ffb86c">₩${d.savings.toLocaleString()} 절약!</span>)</div>`;
+                    
+                    d.products.forEach(p => {
+                        dupeHtml += `
+                            <div class="rec-item" style="border-left: 3px solid #ffd700; background: #222; margin-bottom: 5px;">
+                                <strong>${p.brand_name}</strong> ${p.product_name} <span style="float:right; color:#ffb86c;">₩${p.price.toLocaleString()}</span>
+                            </div>
+                        `;
+                    });
+                    dupeHtml += `</div>`;
+                });
+                
+                resultDiv.innerHTML = dupeHtml;
+                panel.style.display = 'block';
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        async function fetchRecommendations(pid) {
+            try {
+                const res = await fetch(`${API_BASE}/products/${pid}/recommendations`);
+                const data = await res.json();
+                
+                document.getElementById('recommendationPanel').style.display = 'block';
+                
+                document.getElementById('recGoodList').innerHTML = data.recommended.map(s => 
+                    `<div class="rec-item good" onclick="toggleSelect('${s.product.product_id}')">
+                        <strong style="color:var(--success-color)">${s.score}점</strong> | [${s.product.brand_name}] ${s.product.product_name}
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">${s.synergies[0] || '무난한 호환성'}</div>
+                    </div>`
+                ).join('');
+                
+                document.getElementById('recBadList').innerHTML = data.conflicts.map(s => 
+                    `<div class="rec-item bad" onclick="toggleSelect('${s.product.product_id}')">
+                        <strong style="color:var(--danger-color)">${s.score}점</strong> | [${s.product.brand_name}] ${s.product.product_name}
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:3px;">${s.warnings[0] || '특별한 경고 없음'}</div>
+                    </div>`
+                ).join('');
+            } catch (e) {
+                console.error('추천 불러오기 실패');
+            }
+        }
+
+        function updateSelectedList() {
+            const list = document.getElementById('selectedList');
+            document.getElementById('selCount').innerText = `(${selectedIds.size}/5)`;
+            
+            if(selectedIds.size === 0) {
+                list.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-top: 50px;">좌측에서 배합을 원하는 화장품을 선택하세요.</p>';
+                return;
+            }
+            
+            list.innerHTML = '';
+            selectedIds.forEach(pid => {
+                const p = allProducts.find(x => x.product_id === pid);
+                const li = document.createElement('li');
+                li.className = 'selected-item';
+                li.innerHTML = `
+                    <div>
+                        <div style="font-size:0.7rem; color:var(--accent-color);">${p.brand_name}</div>
+                        <h4>${p.product_name}</h4>
+                        <div style="font-size:0.8rem; color:#ffb86c; margin-top:3px;">₩${p.price.toLocaleString()}</div>
+                    </div>
+                    <button class="btn-remove" onclick="toggleSelect('${pid}')">×</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        async function analyzeCombination() {
+            if(selectedIds.size === 0) { alert('분석할 제품을 선택해주세요.'); return; }
+            
+            const payload = { product_ids: Array.from(selectedIds) };
+            try {
+                const res = await fetch(`${API_BASE}/analyze`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                showResults(data);
+            } catch (err) {
+                alert('분석 중 오류가 발생했습니다.');
+            }
+        }
+
+        function showResults(data) {
+            document.getElementById('resultOverlay').style.display = 'flex';
+            
+            const selectedProducts = allProducts.filter(p => selectedIds.has(p.product_id));
+            const totalPrice = selectedProducts.reduce((sum, p) => sum + p.price, 0);
+            
+            document.getElementById('idealRatioTxt').innerText = data.ideal_ratio;
+            document.getElementById('summaryTxt').innerHTML = `궁합 스코어: ${data.pairing_score}점 | ${data.summary}<br><span style="color:#ffb86c; font-weight:bold; font-size:1.1em; display:inline-block; margin-top:8px;">이 루틴 총 예상 비용: ₩${totalPrice.toLocaleString()}</span>`;
+            
+            // 펩타이드 인사이트
+            const afSec = document.getElementById('alphafoldSection');
+            afSec.innerHTML = '';
+            if(data.peptide_report.has_protein) {
+                data.peptide_report.protein_analyses.forEach(a => {
+                    afSec.innerHTML += `
+                        <div class="result-box alphafold">
+                            <h4 style="margin:0 0 5px 0;">[${a.ingredient}] 참고 ID: ${a.reference_protein_id}</h4>
+                            <p style="margin:0 0 5px 0; color:var(--alphafold-color);">구조 신뢰도 지수: ${a.structure_confidence} (${a.confidence_level})</p>
+                            <p style="margin:0; font-size:0.9rem;">작용 기전: ${a.mechanism}</p>
+                            <p style="margin:5px 0 0 0; font-size:0.9rem; color:var(--text-muted);">${a.insight}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                afSec.innerHTML = '<p style="color:var(--text-muted); font-size:0.9rem;">선택된 제품에 펩타이드 인사이트 분석 대상 성분(펩타이드류 등)이 포함되어 있지 않습니다.</p>';
+            }
+
+            // 시너지/경고
+            document.getElementById('synergySection').innerHTML = data.synergies.map(s => 
+                `<div class="result-box synergy"><h4 style="margin:0 0 5px 0; color:var(--success-color)">${s.title}</h4><p style="margin:0;">${s.description}</p></div>`
+            ).join('');
+            
+            document.getElementById('warningSection').innerHTML = data.warnings.map(w => 
+                `<div class="result-box warning"><h4 style="margin:0 0 5px 0; color:var(--danger-color)">${w.title}</h4><p style="margin:0;">${w.description}</p><p style="margin:5px 0 0 0; font-size:0.8rem; color:var(--warning-color);">대상: ${w.affected_products.join(', ')}</p></div>`
+            ).join('');
+
+            // 순서
+            document.getElementById('routineSection').innerHTML = data.routine_order.map(r => 
+                `<div style="margin-bottom:10px; padding:10px; background:rgba(0,0,0,0.2); border-radius:8px;">
+                    <strong>${r.order}. [${r.brand_name}] ${r.product_name}</strong>
+                    <span style="float:right; color:var(--accent-color); font-size:0.85rem;">${r.timing === 'Both' ? '아침/저녁' : r.timing === 'Morning' ? '아침' : '저녁'}</span>
+                    <div style="font-size:0.85rem; color:var(--text-muted); margin-top:5px;">${r.reason}</div>
+                </div>`
+            ).join('');
+            
+            // 디테일 지표
+            const sm = data.sensory_metrics;
+            document.getElementById('sensorySection').innerHTML = `
+                <div>
+                    <div>발림성 (Spreadability) <span style="float:right">${sm.spreadability}%</span></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${sm.spreadability}%; background: #58a6ff;"></div></div>
+                    
+                    <div>흡수력 (Absorption) <span style="float:right">${sm.absorption}%</span></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${sm.absorption}%; background: #3fb950;"></div></div>
+                    
+                    <div>유분감 (Oiliness) <span style="float:right">${sm.oiliness}%</span></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${sm.oiliness}%; background: #d29922;"></div></div>
+                    
+                    <div>화장 밀림 확률 <span style="float:right">${sm.pilling_probability}%</span></div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${sm.pilling_probability}%; background: #f85149;"></div></div>
+                </div>
+                <div>
+                    <div style="margin-bottom:10px;"><strong>피부 자극도:</strong> ${sm.irritation_level}%</div>
+                    <div style="margin-bottom:10px;"><strong>모공 막힘(0~5):</strong> ${sm.comedogenicity}</div>
+                    <div style="margin-bottom:10px;"><strong>제형:</strong> ${sm.texture}</div>
+                    <div style="margin-bottom:15px;"><strong>향:</strong> ${sm.scent}</div>
+                    <div>
+                        <span class="badge">평균 pH ${sm.avg_ph}</span>
+                        ${sm.has_functional ? '<span class="badge" style="background:rgba(163,113,247,0.3); color:#a371f7;">고효능 성분 포함</span>' : ''}
+                        ${sm.packaging_types.map(t => `<span class="badge">${t} 용기</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // AI 결론
+            document.getElementById('aiConclusion').innerText = data.ai_conclusion;
+        }
+
+        function closeModal() {
+            document.getElementById('resultOverlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
