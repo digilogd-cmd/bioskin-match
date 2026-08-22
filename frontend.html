@@ -233,7 +233,11 @@
         .rec-item.good { border-left: 3px solid var(--success-color); }
         .rec-item.bad { border-left: 3px solid var(--danger-color); }
 
-        /* ── 모바일 (768px 이하): 좌우 2단 → 세로 배치 + 하단 고정 선택바 ── */
+        /* 접기/펼치기 토글 버튼 — 기본(PC)에선 숨김 */
+        .rp-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+        .rp-toggle { display: none; }
+
+        /* ── 모바일 (768px 이하): 좌우 2단 → 세로 배치 + 하단 접이식 선택바 ── */
         @media (max-width: 768px) {
             body { overflow: auto; height: auto; min-height: 100vh; }
             .header { padding: 12px 16px; }
@@ -245,28 +249,58 @@
                 border-right: none;
                 overflow: visible;
                 padding: 14px;
-                /* 하단 고정 선택바에 목록 끝이 가려지지 않도록 여유 확보 */
-                padding-bottom: 190px;
+                /* 하단 접힌 선택바에 목록 끝이 가려지지 않을 만큼만 여유 */
+                padding-bottom: 120px;
             }
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .product-card { padding: 12px; }
             .p-name { font-size: 0.9rem; }
-            .filter-btn { padding: 7px 12px; }
+
+            /* 필터: 세로로 쌓이던 버튼 수십 개 → 좌우로 쓸어넘기는 한 줄 */
+            .filter-group {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 6px;
+                scrollbar-width: none;
+            }
+            .filter-group::-webkit-scrollbar { display: none; }
+            .filter-title { flex: 0 0 auto; margin-bottom: 0; font-size: 0.78rem; }
+            .filter-btn { flex: 0 0 auto; margin: 0; padding: 7px 12px; }
 
             .right-panel {
                 position: fixed;
                 left: 0; right: 0; bottom: 0;
                 min-width: 0;
-                max-height: 46vh;
+                max-height: 60vh;
                 overflow-y: auto;
                 background: rgba(13, 17, 23, 0.97);
                 border-top: 1px solid var(--glass-border);
                 box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55);
-                padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) 16px;
+                padding: 10px 16px calc(10px + env(safe-area-inset-bottom)) 16px;
                 z-index: 50;
             }
-            .right-panel h3 { font-size: 0.95rem; margin-bottom: 8px; }
-            .selected-list { flex: none; max-height: 18vh; overflow-y: auto; margin-bottom: 10px; }
+            .right-panel h3 { font-size: 0.95rem; }
+            .rp-head { margin-bottom: 10px; cursor: pointer; }
+            .rp-toggle {
+                display: inline-block;
+                flex: 0 0 auto;
+                background: rgba(88, 166, 255, 0.12);
+                border: 1px solid var(--glass-border);
+                color: var(--accent-color);
+                padding: 6px 12px;
+                border-radius: 16px;
+                font-size: 0.78rem;
+                cursor: pointer;
+            }
+            /* 접힌 상태(기본): 카운트 한 줄 + 분석 버튼만. 목록/추천/듀프는 펼쳤을 때만 */
+            .right-panel:not(.expanded) .selected-list,
+            .right-panel:not(.expanded) #recommendationPanel,
+            .right-panel:not(.expanded) #dupePanel { display: none !important; }
+            .selected-list { flex: none; max-height: 22vh; overflow-y: auto; margin-bottom: 10px; }
             .selected-list p { margin-top: 8px !important; }
             .selected-item { padding: 8px 12px; margin-bottom: 6px; }
             .selected-item h4 { font-size: 0.85rem; }
@@ -310,7 +344,10 @@
 
         <!-- Right Panel: Selection & Action -->
         <div class="right-panel">
-            <h3 style="margin-top:0; color: var(--accent-color);">선택된 화장품 <span id="selCount">(0/5)</span></h3>
+            <div class="rp-head" onclick="toggleMobilePanel()">
+                <h3 style="margin:0; color: var(--accent-color);">선택된 화장품 <span id="selCount">(0/5)</span></h3>
+                <button type="button" class="rp-toggle" id="rpToggle" onclick="event.stopPropagation(); toggleMobilePanel()">▲ 목록 보기</button>
+            </div>
             <ul class="selected-list" id="selectedList">
                 <p style="color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-top: 50px;">좌측에서 배합을 원하는 화장품을 선택하세요.</p>
             </ul>
@@ -460,6 +497,14 @@
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        function toggleMobilePanel() {
+            // 모바일 하단 바 접기/펼치기 (PC에서는 토글 버튼 자체가 숨겨져 있어 동작 없음)
+            const panel = document.querySelector('.right-panel');
+            panel.classList.toggle('expanded');
+            document.getElementById('rpToggle').innerText =
+                panel.classList.contains('expanded') ? '▼ 접기' : '▲ 목록 보기';
         }
 
         function toggleSelect(pid) {
