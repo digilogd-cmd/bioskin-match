@@ -232,6 +232,52 @@
         .rec-item:hover { background: rgba(255,255,255,0.05); }
         .rec-item.good { border-left: 3px solid var(--success-color); }
         .rec-item.bad { border-left: 3px solid var(--danger-color); }
+
+        /* ── 모바일 (768px 이하): 좌우 2단 → 세로 배치 + 하단 고정 선택바 ── */
+        @media (max-width: 768px) {
+            body { overflow: auto; height: auto; min-height: 100vh; }
+            .header { padding: 12px 16px; }
+            .header h1 { font-size: 1.25rem; }
+            .header div { font-size: 0.72rem !important; }
+
+            .dashboard { flex-direction: column; overflow: visible; }
+            .left-panel {
+                border-right: none;
+                overflow: visible;
+                padding: 14px;
+                /* 하단 고정 선택바에 목록 끝이 가려지지 않도록 여유 확보 */
+                padding-bottom: 190px;
+            }
+            .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .product-card { padding: 12px; }
+            .p-name { font-size: 0.9rem; }
+            .filter-btn { padding: 7px 12px; }
+
+            .right-panel {
+                position: fixed;
+                left: 0; right: 0; bottom: 0;
+                min-width: 0;
+                max-height: 46vh;
+                overflow-y: auto;
+                background: rgba(13, 17, 23, 0.97);
+                border-top: 1px solid var(--glass-border);
+                box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.55);
+                padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) 16px;
+                z-index: 50;
+            }
+            .right-panel h3 { font-size: 0.95rem; margin-bottom: 8px; }
+            .selected-list { flex: none; max-height: 18vh; overflow-y: auto; margin-bottom: 10px; }
+            .selected-list p { margin-top: 8px !important; }
+            .selected-item { padding: 8px 12px; margin-bottom: 6px; }
+            .selected-item h4 { font-size: 0.85rem; }
+            .analyze-btn { width: 100%; padding: 13px; font-size: 1rem; }
+
+            .modal { width: 94%; padding: 18px; max-height: 88vh; }
+            .ratio-box { padding: 14px; }
+            .ratio-box h2 { font-size: 1.15rem; }
+            #sensorySection { grid-template-columns: 1fr !important; padding: 14px !important; }
+            #aiConclusion { font-size: 0.95rem !important; padding: 14px !important; }
+        }
     </style>
 </head>
 <body>
